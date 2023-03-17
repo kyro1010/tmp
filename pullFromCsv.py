@@ -15,11 +15,11 @@ import pybel
 from gensim.models import word2vec
 from mol2vec.features import mol2alt_sentence, mol2sentence, MolSentence, DfVec, sentences2vec
 
-#from gensim.models import Word2Vec
+from gensim.models import Word2Vec
 
-#model = Word2Vec.load('model_300dim.pkl')
+model = Word2Vec.load('model_300dim.pkl')
 #model = word2vec.Word2Vec.load('mol2vec/examples/models/model_300dim.pkl')
-model = word2vec.Word2Vec.load('model_300dim.pkl')
+#model = word2vec.Word2Vec.load('model_300dim.pkl')
 
 def molToVec(smiles):
 	if smiles == None:
@@ -57,7 +57,7 @@ while True:
 	user = "doadmin",
 	password ="AVNS_HYWrZBGRK742SWOrp31",
 	port = 25060,
-	database = "test3"
+	database = "test4"
 	)
 
 	mycursor = mydb.cursor()
@@ -127,7 +127,7 @@ while True:
 						mySqlFeaturesActual.append(smiles)
 						stringFormattingList.append('%s')
 						#drugInfo[id_]['SMILES'] = None
-
+						print(len(smiles))
 					if 'XLogP' in d:
 						xlogP = d['XLogP']
 						mySqlFeatures.append('base_xlogP')
@@ -151,7 +151,7 @@ while True:
 
 
 					#TODO: Then vectorize the molecule from the SMILES representation.
-					drugVector = molToVec(smiles)
+					molVector = molToVec(smiles)
 					#TODO: Now  convert that vector to a string.
 					molVector = vecToStr(molVector)
 
@@ -175,6 +175,8 @@ while True:
 
 			mySqlFeaturesActual = tuple(mySqlFeaturesActual)
 			print(stringFormattingString)
+			print(mySqlFeaturesString)
+			print(molVector)
 			print(("INSERT INTO drugsOriginal "+ mySqlFeaturesString+" VALUES "+ str(stringFormattingString)) % mySqlFeaturesActual)
 			mycursor.execute(("INSERT INTO drugsOriginal "+ mySqlFeaturesString+" VALUES "+ str(stringFormattingString)) % mySqlFeaturesActual)
 			mydb.commit()
